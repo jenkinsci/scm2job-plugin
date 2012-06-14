@@ -1,6 +1,21 @@
 package hudson.plugins.scm2job;
 
-import hudson.Plugin;
+
+import hudson.Extension;
+import hudson.model.Hudson;
+import hudson.model.RootAction;
+import hudson.model.View;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
 
 import hudson.model.AbstractProject;
 
@@ -30,12 +45,28 @@ import org.kohsuke.stapler.StaplerResponse;
 * @author Stefan Brausch
 * @plugin
 */
-public class Scm2Job extends Plugin {
+
+@ExportedBean
+@Extension
+public class Scm2Job implements RootAction {
 
     enum Format {TEXT, URL};
 
-    public void start() throws Exception {
+    private static final Logger LOGGER = Logger
+       .getLogger(Scm2Job.class.getName());
+
+    public final String getIconFileName() {
+       return "/plugin/scm2job/icons/scm2job-32x32.png";
     }
+
+    public final String getDisplayName() {
+        return "SCM2Job";
+    }
+
+    public final String getUrlName() {
+        return "/scm2job";
+    }
+
 
     public void doGetJobs(StaplerRequest req, StaplerResponse rsp)
             throws IOException {
