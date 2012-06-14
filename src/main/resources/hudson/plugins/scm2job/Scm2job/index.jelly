@@ -5,12 +5,19 @@
         <l:side-panel/>
         <l:main-panel>
             <h1>SCM2Job</h1>
-            
+
             <h2>Get jobs by SCM path</h2>
             <form action="${rootURL}/plugin/scm2job/getJobs" method="get">
-            SCM Path:
-            <input type="text" name="path" value="" style="width:300px" id="path"/>
-            <input type="submit" value="Get"/>
+                SCM Path:
+                <input type="text" name="path" value="" style="width:300px" id="path"/>
+
+                <p>Ausgabe als:</p>
+                <f:radio name="format" value="text"/>
+                Text<br />
+                <f:radio name="format" value="url"/>
+                URL<br />
+            
+                <input type="submit" value="Get"/>
             </form>
             
         </l:main-panel>
