@@ -1,4 +1,4 @@
 <div>
-    This plugin find the job for you if you know only the scm url of the job.
+    This plugin finds the job for you if you know only the scm url of the job.
     Also its possible to build jobs only if you know the scm url (At the moment only for svn and cvs)
 </div>
