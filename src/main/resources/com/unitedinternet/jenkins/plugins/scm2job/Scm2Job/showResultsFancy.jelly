@@ -1,0 +1,25 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <l:layout>
+        <l:header title="scm2job plugin"/>
+        <l:side-panel>
+    		<l:tasks>
+				<l:task icon="plugin/scm2job/icons/up-32x32.png" href="${rootURL}/" title="Back to Jenkins" />
+      			<l:task icon="plugin/scm2job/icons/scm2job-32x32.png" href="${rootURL}/scm2job" title="New Search" />
+      		</l:tasks>
+ 		</l:side-panel>
+        <l:main-panel>
+        	<j:choose>
+	       		<j:when test="${it.getResults().size() == 0}">
+    	   			<p>No Hudson job found.</p>
+    	   		</j:when>
+       			<j:otherwise>
+       				<p>Found the following Hudson jobs:</p>
+       				<j:forEach items="${it.getResults()}" var="job">
+	       				<a href="../${job.getUrl()}">${job.getName()}</a> <br />
+       				</j:forEach>
+       			</j:otherwise>
+       		</j:choose>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
