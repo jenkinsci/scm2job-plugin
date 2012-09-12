@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 
 /**
-* Entry point of scm2job plugin.
+* Entry point of SCM2Job plugin.
 *
 * @author Stefan Brausch
 * @plugin
@@ -38,14 +38,14 @@ import java.util.ArrayList;
 
 @ExportedBean
 @Extension
-public class Scm2Job implements RootAction {
+public class SCM2Job implements RootAction {
 
     private ArrayList<Job> list = new ArrayList<Job>();
     private Format paramFormat;
     enum Format {TEXT, URL};
 
     private static final Logger LOGGER = Logger
-       .getLogger(Scm2Job.class.getName());
+       .getLogger(SCM2Job.class.getName());
 
     public final String getIconFileName() {
        return "/plugin/scm2job/icons/scm2job-32x32.png";
