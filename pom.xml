@@ -10,8 +10,10 @@
 
 	<artifactId>scm2job</artifactId>
 	<packaging>hpi</packaging>
-	<version>2-SNAPSHOT</version>
 	<name>Jenkins SCM to job plugin</name>
+    	<description>Finds jobs by their SCM URL</description>
+	<version>2-SNAPSHOT</version>
+	<url>http://wiki.jenkins-ci.org/display/JENKINS/SCM2Job+Plugin</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -23,15 +25,18 @@
 			<id>stefanbrausch</id>
 			<name>Stefan Brausch</name>
 			<email>stefan.brausch@1und1.de</email>
-			<timezone>+1</timezone>
 		</developer>
         	<developer>
 			<id>kstutz</id>
 			<name>Kathi Stutz</name>
-			<email>logfilesizechecker@kathistutz.de</email>
-			<timezone>+1</timezone>
+			<email>scm2job@kathistutz.de</email>
         	</developer>
     	</developers>
+	<scm>
+        	<connection>scm:git:ssh://github.com/jenkinsci/scm2job-plugin.git</connection>
+        	<developerConnection>scm:git:ssh://git@github.com/jenkinsci/scm2job-plugin.git</developerConnection>
+        	<url>https://github.com/jenkinsci/scm2job-plugin</url>
+        </scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
@@ -62,8 +67,8 @@
 			<url>http://repo.jenkins-ci.org/public</url>
 		</pluginRepository>
 	</pluginRepositories>
-    <build>
-        <plugins>
+	<build>
+		<plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>

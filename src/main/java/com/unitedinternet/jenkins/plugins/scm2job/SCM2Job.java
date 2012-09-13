@@ -40,12 +40,12 @@ import java.util.ArrayList;
 public class SCM2Job implements RootAction {
 
     /**List of existing Hudson jobs.*/
-    private ArrayList<Job> list = new ArrayList<Job>();
+    private ArrayList<Item> list = new ArrayList<Item>();
     
     /**Submitted parameter format.*/
     private Format paramFormat;
     
-    /**Submitted parameter format.*/
+    /**Enum of possible parameter formats.*/
     private enum Format { TEXT, URL };
 
     /**Meet our logger.*/
@@ -73,18 +73,10 @@ public class SCM2Job implements RootAction {
     }
 
     /**
-     * Returns the format which was submitted as a parameter.
-     * @return format for display of results
-     */
-    public Format getFormat() {
-        return paramFormat;
-    }
-    
-    /**
      * Returns the jobs found.
      * @return list of jobs
      */
-    public ArrayList<Job> getResults() {
+    public ArrayList<Item> getResults() {
         return list;
     }
     
@@ -114,7 +106,7 @@ public class SCM2Job implements RootAction {
             final List<Item> getitems = Hudson.getInstance().getAllItems(Item.class);
             for (Item item : getitems) {
                 if (checkSCMPath(item, paramPath)) {
-                    list.add(new Job(item.getName(), item.getUrl()));
+                    list.add(item);
                 }
             }
 
@@ -139,7 +131,7 @@ public class SCM2Job implements RootAction {
      * @return error message
      */
     public String getPathMissing() {
-        return Messages.PathMissing();
+        return Messages.pathMissing();
     }
 
     
@@ -205,24 +197,5 @@ public class SCM2Job implements RootAction {
             }
         }
         return scmPath;
-    }
-       
-    /**Convenience class that holds a Jenkins job together with its URL.*/
-    public class Job {
-        private String name;
-        private String url;
-        
-        Job(String name, String url){
-            this.name = name;
-            this.url = url;
-        }
-        
-        public String getName(){
-            return name;
-        }
-        
-        public String getUrl(){
-            return url;
-        }
     }
 }

@@ -91,8 +91,6 @@ public class SCM2JobTest extends HudsonTestCase {
         radioButton.click();
         final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
         
-        System.out.println(results.asXml());
-        
         assertStringContains(results.asXml(), "<a href=\"../job/" + gitProjectNames[1] + "/\">");
         assertStringContains(results.asXml(), "<a href=\"../job/" + gitProjectNames[2] + "/\">");
     }
@@ -110,5 +108,28 @@ public class SCM2JobTest extends HudsonTestCase {
         
         assertStringContains(results.asXml(), "<a href=\"../job/" + svnProjectNames[0] + "/\">");
         assertStringContains(results.asXml(), "<a href=\"../job/" + svnProjectNames[1] + "/\">");
+    }
+    
+    //Tests whether error message is displayed when no path submitted
+    public void testNoPathGiven() throws Exception {
+        final WebClient webClient =  new WebClient();
+        final HtmlPage htmlpage = webClient.goTo("scm2job");
+
+        final HtmlElement textbox = htmlpage.getElementByName("path");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+
+        assertStringContains(results.asXml(), Messages.pathMissing());
+    }
+
+    //Tests whether error message is displayed when no job found
+    public void testNoJobFound() throws Exception {
+        final WebClient webClient =  new WebClient();
+        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        
+        final HtmlElement textbox = htmlpage.getElementByName("path");
+        textbox.type("bla");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+        
+        assertStringContains(results.asXml(), "No Jenkins job found");
     }
 }
