@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <j:choose>
        	<j:when test="${it.getResults().size() == 0}">
-       		<p>No Hudson job found.</p>
+       		<p>${%No Jenkins job found for this SCM path.}</p>
        	</j:when>
        	<j:otherwise>
        		<j:forEach items="${it.getResults()}" var="job">

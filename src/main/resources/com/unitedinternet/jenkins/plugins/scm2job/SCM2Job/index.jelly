@@ -3,27 +3,27 @@
     <l:layout title="SCM2Job Plugin">
         <l:side-panel>
     		<l:tasks>
-      			<l:task icon="plugin/scm2job/icons/up-32x32.png" href="${rootURL}/" title="Back to Jenkins" />
+      			<l:task icon="plugin/scm2job/icons/up-32x32.png" href="${rootURL}/" title="${%Back to Jenkins}" />
       		</l:tasks>
  		</l:side-panel>
         <l:main-panel>
             <h1>SCM2Job</h1>
-            <h2>Get jobs by SCM path</h2>
+            <h2>${%Get jobs by SCM path}</h2>
             <f:form action="${rootURL}/scm2job/getJobs" method="post" name="scm2job">
     
-	            <f:entry title="SCM Path:">
+	            <f:entry title="${%SCM Path:}">
 	                <f:textbox name="path" style="width:300px"/>
                 </f:entry>
 
-				<f:entry title="Show results as">
+				<f:entry title="${%Show results as}">
 	                <f:radio name="format" value="text" checked="true"/>
-        	        Text<br />
+        	        ${%Text}<br />
     	            <f:radio name="format" value="url"/>
-            	    Links<br />
+            	    ${%Links}<br />
 				</f:entry>
             
             	<f:entry>
-	                <f:submit name="submit" value="Submit"/>
+	                <f:submit name="submit" value="${%Submit}"/>
             	</f:entry>
     
             </f:form>
