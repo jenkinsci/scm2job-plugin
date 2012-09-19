@@ -3,5 +3,5 @@
  * <a href="https://wiki.jenkins-ci.org/display/JENKINS/SCM2Job+Plugin">SCM2Job Plugin</a>.</p>
  * <p>This plugin finds the corresponding Jenkins jobs for a given scm location.</p>
  */
-package hudson.plugins.scm2job;
+package com.unitedinternet.jenkins.plugins.scm2job;
 
