@@ -23,7 +23,7 @@
 				</f:entry>
             
             	<f:entry>
-	                <f:submit value="${%Submit}"/>
+	                <f:submit value="${%Submit}" name="Submit"/>
             	</f:entry>
     
             </f:form>

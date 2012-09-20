@@ -61,7 +61,7 @@ public class SCM2JobTest extends HudsonTestCase {
         
         final HtmlElement element = htmlpage.getElementByName("path");
         element.type(gitUrls[1]);
-        final HtmlPage results = submit(element.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
         assertStringContains(results.asXml(), gitProjectNames[1]);
         assertStringContains(results.asXml(), gitProjectNames[2]);
@@ -74,7 +74,7 @@ public class SCM2JobTest extends HudsonTestCase {
         
         final HtmlElement element = htmlpage.getElementByName("path");
         element.type(svnUrls[0]);
-        final HtmlPage results = submit(element.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
         assertStringContains(results.asXml(), svnProjectNames[0]);
         assertStringContains(results.asXml(), svnProjectNames[1]);
@@ -89,7 +89,7 @@ public class SCM2JobTest extends HudsonTestCase {
         textbox.type(gitUrls[1]);
         final HtmlElement radioButton = htmlpage.getElementsByName("format").get(1);
         radioButton.click();
-        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
         assertStringContains(results.asXml(), "<a href=\"../job/" + gitProjectNames[1] + "/\">");
         assertStringContains(results.asXml(), "<a href=\"../job/" + gitProjectNames[2] + "/\">");
@@ -104,7 +104,7 @@ public class SCM2JobTest extends HudsonTestCase {
         textbox.type(svnUrls[0]);
         final HtmlElement radioButton = htmlpage.getElementsByName("format").get(1);
         radioButton.click();
-        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
         assertStringContains(results.asXml(), "<a href=\"../job/" + svnProjectNames[0] + "/\">");
         assertStringContains(results.asXml(), "<a href=\"../job/" + svnProjectNames[1] + "/\">");
@@ -116,7 +116,7 @@ public class SCM2JobTest extends HudsonTestCase {
         final HtmlPage htmlpage = webClient.goTo("scm2job");
 
         final HtmlElement textbox = htmlpage.getElementByName("path");
-        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
 
         assertStringContains(results.asXml(), Messages.pathMissing());
     }
@@ -128,7 +128,7 @@ public class SCM2JobTest extends HudsonTestCase {
         
         final HtmlElement textbox = htmlpage.getElementByName("path");
         textbox.type("bla");
-        final HtmlPage results = submit(textbox.getEnclosingForm(), "submit");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
         assertStringContains(results.asXml(), "No Jenkins job found");
     }
