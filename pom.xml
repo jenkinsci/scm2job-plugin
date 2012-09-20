@@ -36,6 +36,10 @@
         	<developerConnection>scm:git:ssh://git@github.com/jenkinsci/scm2job-plugin.git</developerConnection>
         	<url>https://github.com/jenkinsci/scm2job-plugin</url>
         </scm>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://issues.jenkins-ci.org/browse/JENKINS/component/16923</url>
+	</issueManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
