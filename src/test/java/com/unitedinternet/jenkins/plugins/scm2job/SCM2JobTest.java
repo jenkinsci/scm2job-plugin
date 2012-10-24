@@ -57,9 +57,9 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether the two projects with the same git repo are found
     public void testGitPlain() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
         
-        final HtmlElement element = htmlpage.getElementByName("path");
+        final HtmlElement element = htmlPage.getElementByName("path");
         element.type(gitUrls[1]);
         final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
@@ -70,9 +70,9 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether the two projects with the same svn location are found
     public void testSVNPlain() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
         
-        final HtmlElement element = htmlpage.getElementByName("path");
+        final HtmlElement element = htmlPage.getElementByName("path");
         element.type(svnUrls[0]);
         final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
@@ -83,11 +83,11 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether the links to the two git projects are found
     public void testGitFancy() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
         
-        final HtmlElement textbox = htmlpage.getElementByName("path");
+        final HtmlElement textbox = htmlPage.getElementByName("path");
         textbox.type(gitUrls[1]);
-        final HtmlElement radioButton = htmlpage.getElementsByName("format").get(1);
+        final HtmlElement radioButton = htmlPage.getElementsByName("format").get(1);
         radioButton.click();
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
@@ -98,11 +98,11 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether the links to the two svn projects are found
     public void testSVNFancy() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
         
-        final HtmlElement textbox = htmlpage.getElementByName("path");
+        final HtmlElement textbox = htmlPage.getElementByName("path");
         textbox.type(svnUrls[0]);
-        final HtmlElement radioButton = htmlpage.getElementsByName("format").get(1);
+        final HtmlElement radioButton = htmlPage.getElementsByName("format").get(1);
         radioButton.click();
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
@@ -113,9 +113,9 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether error message is displayed when no path submitted
     public void testNoPathGiven() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
 
-        final HtmlElement textbox = htmlpage.getElementByName("path");
+        final HtmlElement textbox = htmlPage.getElementByName("path");
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
 
         assertStringContains(results.asXml(), Messages.pathMissing());
@@ -124,9 +124,9 @@ public class SCM2JobTest extends HudsonTestCase {
     //Tests whether error message is displayed when no job found
     public void testNoJobFound() throws Exception {
         final WebClient webClient =  new WebClient();
-        final HtmlPage htmlpage = webClient.goTo("scm2job");
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
         
-        final HtmlElement textbox = htmlpage.getElementByName("path");
+        final HtmlElement textbox = htmlPage.getElementByName("path");
         textbox.type("bla");
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
