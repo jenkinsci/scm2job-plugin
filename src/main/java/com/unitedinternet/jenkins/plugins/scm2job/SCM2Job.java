@@ -148,7 +148,7 @@ public class SCM2Job implements RootAction {
         if (scmPath != null) {
             for (int i = 0; i < scmPath.length; i++) {
                 final String checkPath = addSlashIfMissing(scmPath[i]);
-                LOGGER.fine("check " + path + " against " + scmPath[i]);
+                LOGGER.fine("check " + path + " against " + checkPath);
                 if (checkPath.length() > 0
                         && checkPath.length() <= path.length()
                         && checkPath.equalsIgnoreCase(path.substring(0,
@@ -199,6 +199,11 @@ public class SCM2Job implements RootAction {
         return scmPath;
     }
     
+    /**
+     * Adds a slash to an scm path if the path ends without one. 
+     * @param path The scm path as String
+     * @return The path as String
+     */
     private String addSlashIfMissing(String path) {
         if (!path.endsWith("/")) {
             return path + "/";
