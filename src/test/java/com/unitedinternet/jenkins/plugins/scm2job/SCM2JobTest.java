@@ -8,6 +8,8 @@ import hudson.scm.NullSCM;
 import hudson.scm.SubversionSCM;
 
 import org.jvnet.hudson.test.HudsonTestCase;
+
+import com.gargoylesoftware.htmlunit.WebAssert;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -24,13 +26,14 @@ public class SCM2JobTest extends HudsonTestCase {
 
     private String[] gitUrls = {"git://github.com/stefanbrausch/scm2job-plugin.git",
                                 "git://github.com/abracadabra/hmpf.git",
-                                "git://github.com/abracadabra/hmpf.git", };
+                                "git://github.com/abracadabra/hmpf.git/", };
 
-    private String[] svnProjectNames = {"svnproject1", "svnproject2", "svnproject3"};
+    private String[] svnProjectNames = {"svnproject1", "svnproject2", "svnproject3", "svnproject4"};
 
-    private String[] svnUrls = {"https://svn.foo.org/mojo/trunk/foobar-plugin",
+    private String[] svnUrls = {"https://svn.foo.org/mojo/trunk/foobar-plugin/",
                                 "https://svn.foo.org/mojo/trunk/foobar-plugin",
-                                "https://svn.foo.org/mojo/trunk/lorem", };
+                                "https://svn.foo.org/mojo/trunk/lorem", 
+                                "https://svn.foo.org/mojo/trunk/foobar"};
 
     @Override
     protected void setUp() throws Exception {
@@ -54,7 +57,10 @@ public class SCM2JobTest extends HudsonTestCase {
     }
 
 
-    //Tests whether the two projects with the same git repo are found
+    /**
+     * Tests whether the two projects with the same git repo are found
+     * @throws Exception
+     */
     public void testGitPlain() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -63,11 +69,14 @@ public class SCM2JobTest extends HudsonTestCase {
         element.type(gitUrls[1]);
         final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
-        assertStringContains(results.asXml(), gitProjectNames[1]);
-        assertStringContains(results.asXml(), gitProjectNames[2]);
+        WebAssert.assertTextPresent(results, gitProjectNames[1]);
+        WebAssert.assertTextPresent(results, gitProjectNames[2]);
     }
 
-    //Tests whether the two projects with the same svn location are found
+    /**
+     * Tests whether the two projects with the same svn location are found
+     * @throws Exception
+     */
     public void testSVNPlain() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -76,11 +85,16 @@ public class SCM2JobTest extends HudsonTestCase {
         element.type(svnUrls[0]);
         final HtmlPage results = submit(element.getEnclosingForm(), "Submit");
         
-        assertStringContains(results.asXml(), svnProjectNames[0]);
-        assertStringContains(results.asXml(), svnProjectNames[1]);
+        WebAssert.assertTextPresent(results, svnProjectNames[0]);
+        WebAssert.assertTextPresent(results, svnProjectNames[1]);
+        //Test for false positives when scm urls share nearly the same path
+        WebAssert.assertTextNotPresent(results, svnProjectNames[3]);
     }
     
-    //Tests whether the links to the two git projects are found
+    /**
+     * Tests whether the links to the two git projects are found
+     * @throws Exception
+     */
     public void testGitFancy() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -95,7 +109,10 @@ public class SCM2JobTest extends HudsonTestCase {
         assertStringContains(results.asXml(), "<a href=\"../job/" + gitProjectNames[2] + "/\">");
     }
     
-    //Tests whether the links to the two svn projects are found
+    /**
+     * Tests whether the links to the two svn projects are found
+     * @throws Exception
+     */
     public void testSVNFancy() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -110,7 +127,10 @@ public class SCM2JobTest extends HudsonTestCase {
         assertStringContains(results.asXml(), "<a href=\"../job/" + svnProjectNames[1] + "/\">");
     }
     
-    //Tests whether error message is displayed when no path submitted
+    /**
+     * Tests whether error message is displayed when no path submitted
+     * @throws Exception
+     */
     public void testNoPathGiven() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -118,10 +138,13 @@ public class SCM2JobTest extends HudsonTestCase {
         final HtmlElement textbox = htmlPage.getElementByName("path");
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
 
-        assertStringContains(results.asXml(), Messages.pathMissing());
+        WebAssert.assertTextPresent(results, Messages.pathMissing());
     }
 
-    //Tests whether error message is displayed when no job found
+    /**
+     * Tests whether error message is displayed when no job found
+     * @throws Exception
+     */
     public void testNoJobFound() throws Exception {
         final WebClient webClient =  new WebClient();
         final HtmlPage htmlPage = webClient.goTo("scm2job");
@@ -130,6 +153,17 @@ public class SCM2JobTest extends HudsonTestCase {
         textbox.type("bla");
         final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
         
-        assertStringContains(results.asXml(), "No Jenkins job found");
+        WebAssert.assertTextPresent(results, "No Jenkins job found");
     }
+    
+    /**
+     * Tests for false positives when scm urls start the same
+     * @throws Exception
+     */
+/*    public void testFalsePositiveBug() throws Exception {
+        final FreeStyleProject project = createFreeStyleProject("BugProject");
+        project.setScm(new SubversionSCM("https://svn.foo.org/mojo/trunk/foobar"));
+        projects.add(project);
+    }
+*/    
 }

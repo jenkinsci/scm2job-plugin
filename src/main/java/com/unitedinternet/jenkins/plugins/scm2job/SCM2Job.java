@@ -93,7 +93,7 @@ public class SCM2Job implements RootAction {
         
         list.clear();
 
-        final String paramPath = req.getParameter("path");
+        String paramPath = req.getParameter("path");
         final String paramString = req.getParameter("format");
                  
         if ("text".equals(paramString)) {
@@ -103,6 +103,7 @@ public class SCM2Job implements RootAction {
         }
             
         if (paramPath != null && !paramPath.trim().isEmpty()) {
+            paramPath = addSlashIfMissing(paramPath);
             final List<Item> getitems = Hudson.getInstance().getAllItems(Item.class);
             for (Item item : getitems) {
                 if (checkSCMPath(item, paramPath)) {
@@ -133,7 +134,6 @@ public class SCM2Job implements RootAction {
     public String getPathMissing() {
         return Messages.pathMissing();
     }
-
     
     /**
      * Checks whether SCM path of job fits input SCM path.
@@ -147,7 +147,7 @@ public class SCM2Job implements RootAction {
         final String[] scmPath = getSCMPath(item);
         if (scmPath != null) {
             for (int i = 0; i < scmPath.length; i++) {
-                final String checkPath = scmPath[i];
+                final String checkPath = addSlashIfMissing(scmPath[i]);
                 LOGGER.fine("check " + path + " against " + scmPath[i]);
                 if (checkPath.length() > 0
                         && checkPath.length() <= path.length()
@@ -197,5 +197,13 @@ public class SCM2Job implements RootAction {
             }
         }
         return scmPath;
+    }
+    
+    private String addSlashIfMissing(String path) {
+        if (!path.endsWith("/")) {
+            return path + "/";
+        } else {
+            return path;
+        }
     }
 }
