@@ -149,13 +149,13 @@ public class SCM2Job implements RootAction {
             for (int i = 0; i < scmPath.length; i++) {
                 final String checkPath = addSlashIfMissing(scmPath[i]);
                 LOGGER.fine("check " + path + " against " + checkPath);
-                if ((checkPath.length() > 0) && 
-                   ((checkPath.length() <= path.length()
+                if ((checkPath.length() > 0) 
+                        && ((checkPath.length() <= path.length()
                         && checkPath.equalsIgnoreCase(path.substring(0,
-                            checkPath.length())) )
-                   || ((checkPath.length() > path.length()
+                            checkPath.length())))
+                        || ((checkPath.length() > path.length()
                         && path.equalsIgnoreCase(checkPath.substring(0,
-                            path.length())))))){
+                            path.length())))))) {
                     found = true;
                     LOGGER.fine("Job found!");
                 }
