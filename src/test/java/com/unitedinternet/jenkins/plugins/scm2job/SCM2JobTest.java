@@ -28,12 +28,13 @@ public class SCM2JobTest extends HudsonTestCase {
                                 "git://github.com/abracadabra/hmpf.git",
                                 "git://github.com/abracadabra/hmpf.git/", };
 
-    private String[] svnProjectNames = {"svnproject1", "svnproject2", "svnproject3", "svnproject4"};
+    private String[] svnProjectNames = {"svnproject1", "svnproject2", "svnproject3", "svnproject4", "svnproject5"};
 
     private String[] svnUrls = {"https://svn.foo.org/mojo/trunk/foobar-plugin/",
                                 "https://svn.foo.org/mojo/trunk/foobar-plugin",
                                 "https://svn.foo.org/mojo/trunk/lorem", 
-                                "https://svn.foo.org/mojo/trunk/foobar"};
+                                "https://svn.foo.org/mojo/trunk/foobar",
+                                "https://svn.foo.org/bar/trunk/foobar"};
 
     @Override
     protected void setUp() throws Exception {
@@ -155,6 +156,27 @@ public class SCM2JobTest extends HudsonTestCase {
         
         WebAssert.assertTextPresent(results, "No Jenkins job found");
     }
+    
+    /**
+     * Tests to find all jobs from the same repo
+     * @throws Exception
+     */
+    public void testShowJobsFromSameRepo() throws Exception {
+        final WebClient webClient =  new WebClient();
+        final HtmlPage htmlPage = webClient.goTo("scm2job");
+        
+        final HtmlElement textbox = htmlPage.getElementByName("path");
+        textbox.type("https://svn.foo.org/mojo");
+        final HtmlPage results = submit(textbox.getEnclosingForm(), "Submit");
+        
+        WebAssert.assertTextNotPresent(results, svnProjectNames[4]);
+        WebAssert.assertTextPresent(results, svnProjectNames[0]);
+        WebAssert.assertTextPresent(results, svnProjectNames[1]);
+        WebAssert.assertTextPresent(results, svnProjectNames[2]);
+        WebAssert.assertTextPresent(results, svnProjectNames[3]);
+
+    }
+    
     
     /**
      * Tests for false positives when scm urls start the same
