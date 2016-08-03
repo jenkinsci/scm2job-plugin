@@ -15,7 +15,6 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.ExportedBean;
 
 import hudson.model.AbstractProject;
-
 import hudson.model.Item;
 import hudson.plugins.git.GitSCM;
 
@@ -27,28 +26,29 @@ import java.io.Writer;
 
 import java.util.ArrayList;
 
-
 /**
-* Entry point of SCM2Job plugin.
-*
-* @author Stefan Brausch
-* @plugin
-*/
+ * Entry point of SCM2Job plugin.
+ *
+ * @author Stefan Brausch
+ * @plugin
+ */
 
 @ExportedBean
 @Extension
 public class SCM2Job implements RootAction {
 
-    /**List of existing Hudson jobs.*/
+    /** List of existing Hudson jobs. */
     private ArrayList<Item> list = new ArrayList<Item>();
-    
-    /**Submitted parameter format.*/
-    private Format paramFormat;
-    
-    /**Enum of possible parameter formats.*/
-    private enum Format { TEXT, URL };
 
-    /**Meet our logger.*/
+    /** Submitted parameter format. */
+    private Format paramFormat;
+
+    /** Enum of possible parameter formats. */
+    private enum Format {
+        TEXT, URL
+    };
+
+    /** Meet our logger. */
     private static final Logger LOGGER = Logger.getLogger(SCM2Job.class.getName());
 
     /**
@@ -74,34 +74,37 @@ public class SCM2Job implements RootAction {
 
     /**
      * Returns the jobs found.
+     * 
      * @return list of jobs
      */
     public ArrayList<Item> getResults() {
         return list;
     }
-    
+
     /**
-     * Called when the 'Submit' button is pressed.
-     * Processes the submitted parameters and writes the results back to a new jelly site.
+     * Called when the 'Submit' button is pressed. Processes the submitted
+     * parameters and writes the results back to a new jelly site.
      * 
-     * @param req submitted request
-     * @param rsp generated response
-     * @throws IOException Exception for Writer and StaplerResponse operations
+     * @param req
+     *            submitted request
+     * @param rsp
+     *            generated response
+     * @throws IOException
+     *             Exception for Writer and StaplerResponse operations
      */
-    public final void doGetJobs(StaplerRequest req, StaplerResponse rsp)
-        throws IOException {
-        
+    public final void doGetJobs(StaplerRequest req, StaplerResponse rsp) throws IOException {
+
         list.clear();
 
         String paramPath = req.getParameter("path");
         final String paramString = req.getParameter("format");
-                 
+
         if ("text".equals(paramString)) {
             paramFormat = Format.TEXT;
         } else {
             paramFormat = Format.URL;
         }
-            
+
         if (paramPath != null && !paramPath.trim().isEmpty()) {
             paramPath = addSlashIfMissing(paramPath);
             final List<Item> getitems = Hudson.getInstance().getAllItems(Item.class);
@@ -116,95 +119,103 @@ public class SCM2Job implements RootAction {
             } else {
                 rsp.sendRedirect("showResultsFancy");
             }
-            
+
         } else {
             final Writer writer = rsp.getCompressedWriter(req);
             try {
-                writer.append(getPathMissing() + "\n");              
+                writer.append(getPathMissing() + "\n");
             } finally {
                 writer.close();
             }
         }
     }
-    
+
     /**
      * Returns internationalized error message.
+     * 
      * @return error message
      */
     public String getPathMissing() {
         return Messages.pathMissing();
     }
-    
+
     /**
      * Checks whether SCM path of job fits input SCM path.
-     * @param item job
-     * @param path SCM path of job
+     * 
+     * @param item
+     *            job
+     * @param path
+     *            SCM path of job
      * @return true if job has matching scm path
      */
     private boolean checkSCMPath(Item item, String path) {
         Boolean found = false;
-        
+
         final String[] scmPath = getSCMPath(item);
         if (scmPath != null) {
             for (int i = 0; i < scmPath.length; i++) {
                 final String checkPath = addSlashIfMissing(scmPath[i]);
                 LOGGER.fine("check " + path + " against " + checkPath);
-                if ((checkPath.length() > 0) 
-                        && ((checkPath.length() <= path.length()
-                        && checkPath.equalsIgnoreCase(path.substring(0,
-                            checkPath.length())))
-                        || ((checkPath.length() > path.length()
-                        && path.equalsIgnoreCase(checkPath.substring(0,
-                            path.length())))))) {
+                if ((checkPath.length() > 0)
+                        && ((checkPath.length() <= path.length() && checkPath.equalsIgnoreCase(path.substring(0,
+                                checkPath.length()))) || ((checkPath.length() > path.length() && path.equalsIgnoreCase(checkPath
+                                .substring(0, path.length())))))) {
                     found = true;
                     LOGGER.fine("Job found!");
                 }
             }
         }
-        
+
         return found;
     }
 
     /**
      * Finds the Git or SVN locations for an item (job).
-     * @param item a job
+     * 
+     * @param item
+     *            a job
      * @return Array of found SCM paths
      */
     @SuppressWarnings("rawtypes")
     private String[] getSCMPath(Item item) {
 
         String[] scmPath = null;
-        final SCM scm = ((AbstractProject<?, ?>) item).getScm();
 
-        if (scm instanceof SubversionSCM) {
-            final SubversionSCM svn = (SubversionSCM) scm;
-            final ModuleLocation[] locs = svn.getLocations();
-            scmPath = new String[locs.length];
-            for (int i = 0; i < locs.length; i++) {
-                final ModuleLocation moduleLocation = locs[i];
-                scmPath[i] = moduleLocation.remote;
-                LOGGER.fine(scmPath[i] + " added");
-            }
-        } else if (scm instanceof GitSCM) {
-            final GitSCM git = (GitSCM) scm;
-            final List<RemoteConfig> repoList = git.getRepositories();
+        if (item instanceof AbstractProject) {
+            final SCM scm = ((AbstractProject<?, ?>) item).getScm();
 
-            scmPath = new String[repoList.size()];
-            for (int i = 0; i < repoList.size(); i++) {
-                final List<URIish> uris = repoList.get(i).getURIs();
-                for (final Iterator iterator = uris.iterator(); iterator.hasNext();) {
-                    final URIish urIish = (URIish) iterator.next();
-                    scmPath[i] = urIish.toString();
+            if (scm instanceof SubversionSCM) {
+                final SubversionSCM svn = (SubversionSCM) scm;
+                final ModuleLocation[] locs = svn.getLocations();
+                scmPath = new String[locs.length];
+                for (int i = 0; i < locs.length; i++) {
+                    final ModuleLocation moduleLocation = locs[i];
+                    scmPath[i] = moduleLocation.remote;
                     LOGGER.fine(scmPath[i] + " added");
+                }
+            } else if (scm instanceof GitSCM) {
+                final GitSCM git = (GitSCM) scm;
+                final List<RemoteConfig> repoList = git.getRepositories();
+
+                scmPath = new String[repoList.size()];
+                for (int i = 0; i < repoList.size(); i++) {
+                    final List<URIish> uris = repoList.get(i).getURIs();
+                    for (final Iterator iterator = uris.iterator(); iterator.hasNext();) {
+                        final URIish urIish = (URIish) iterator.next();
+                        scmPath[i] = urIish.toString();
+                        LOGGER.fine(scmPath[i] + " added");
+                    }
                 }
             }
         }
         return scmPath;
     }
-    
+
     /**
-     * Adds a slash to an scm path if the path ends without one. 
-     * @param path The scm path as String
+     * Adds a slash to an scm path if the path ends without one.
+     * 
+     * @param path
+     *            The scm path as String
      * @return The path as String
      */
     private String addSlashIfMissing(String path) {
